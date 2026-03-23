@@ -3,6 +3,7 @@ import gspread
 import pandas as pd
 from datetime import datetime
 import plotly.express as px
+import json 
 
 # 1. Configuração inicial da página
 st.set_page_config(page_title="Meu Controle Financeiro", layout="wide")
