@@ -11,7 +11,15 @@ st.title("💸 Dashboard Financeiro")
 # 2. Conecta com o Google Sheets
 @st.cache_resource
 def conectar_planilha():
-    gc = gspread.service_account(filename='credenciais.json')
+    # Verifica se estamos na nuvem (onde os 'secrets' existem)
+    if "google_credentials" in st.secrets:
+        # Puxa a senha do cofre da nuvem
+        credenciais_dict = json.loads(st.secrets["google_credentials"])
+        gc = gspread.service_account_from_dict(credenciais_dict)
+    else:
+        # Puxa a senha do arquivo local (quando rodar no seu PC)
+        gc = gspread.service_account(filename='credenciais.json')
+        
     planilha = gc.open('DashBoard - Finanças')
     return planilha.worksheet('LANÇAMENTOS')
 
