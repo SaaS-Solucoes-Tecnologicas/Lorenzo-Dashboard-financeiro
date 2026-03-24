@@ -70,7 +70,7 @@ def check_password():
             
     if st.button("Esqueci minha senha"):
         st.title("🔐 Esqueceu a senha?")
-        st.write("Não se preocupe, ela está disponível no seu banco de dados (Google Sheeds) na aba CONFIG")
+        st.write("Não se preocupe, ela está disponível no seu banco de dados (Google Sheeds) na aba CONFIG.")
     return False
 
 if check_password():
