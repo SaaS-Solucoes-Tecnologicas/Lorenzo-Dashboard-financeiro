@@ -201,21 +201,29 @@ if check_password():
         st.subheader("✏️ Editar ou Excluir Lançamento")
         
         if not df.empty:
-            # Cria a lista de opções para o SelectBox (mostrando a data, descrição e valor para facilitar a busca)
-            opcoes_lancamentos = df.apply(lambda x: f"Linha {x['Linha_Planilha']}: {x['Data']} - {x['Descrição']} (R$ {x['Valor']:.2f})", axis=1).tolist()
+            # 1. Cria um "dicionário" ligando o número da linha ao texto limpo
+            mapa_lancamentos = {}
+            for index, row in df.iterrows():
+                # O texto que vai aparecer na tela (sem o "Linha X:")
+                texto_exibicao = f"{row['Data']} - {row['Descrição']} (R$ {row['Valor']:.2f})"
+                # Guarda o número da linha como a "chave" invisível
+                mapa_lancamentos[row['Linha_Planilha']] = texto_exibicao
             
-            lancamento_selecionado = st.selectbox("Selecione o lançamento que deseja alterar:", opcoes_lancamentos)
+            # 2. O selectbox mostra o texto, mas devolve o número da linha para o Python!
+            linha_alvo = st.selectbox(
+                "Selecione o lançamento que deseja alterar:", 
+                options=list(mapa_lancamentos.keys()),
+                format_func=lambda x: mapa_lancamentos[x]
+            )
             
-            if lancamento_selecionado:
-                # Extrai apenas o número da linha selecionada (ex: Pega o "5" de "Linha 5:...")
-                linha_alvo = int(lancamento_selecionado.split(":")[0].replace("Linha ", ""))
-                
+            if linha_alvo:
                 # Busca os dados originais dessa linha no nosso DataFrame
                 dados_linha = df[df['Linha_Planilha'] == linha_alvo].iloc[0]
                 
                 st.write("---")
                 st.markdown("**Altere os dados abaixo e salve, ou exclua o registro permanentemente:**")
                 
+               
                 # Monta os campos de input já preenchidos com os dados antigos
                 col_ed1, col_ed2, col_ed3 = st.columns(3)
                 
