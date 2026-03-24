@@ -200,7 +200,4 @@ if check_password():
             # Envia para o Google Sheets
             aba_lancamentos.append_row(nova_linha)
             st.success("Lançamento salvo com sucesso!")
-            
-    st.write("") # Dá um espacinho em branco
-    if st.button("🔄 Atualizar Tabela e Gráficos"):
             st.rerun()
