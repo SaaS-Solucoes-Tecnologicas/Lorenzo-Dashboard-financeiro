@@ -202,5 +202,5 @@ if check_password():
             st.success("Lançamento salvo com sucesso!")
             
 st.write("") # Dá um espacinho em branco
-    if st.button("🔄 Atualizar Tabela e Gráficos"):
+if st.button("🔄 Atualizar Tabela e Gráficos"):
         st.rerun()
