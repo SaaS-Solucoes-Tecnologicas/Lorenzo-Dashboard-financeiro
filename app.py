@@ -40,9 +40,11 @@ if check_password():
     # Aquela trava visual para esconder o menu e o rodapé do Streamlit
     hide_st_style = """
                 <style>
-                #MainMenu {visibility: hidden;}
-                footer {visibility: hidden;}
-                header {visibility: hidden;}
+                #MainMenu {visibility: hidden !important;}
+                footer {visibility: hidden !important;}
+                header {visibility: hidden !important;}
+                [data-testid="stHeader"] {visibility: hidden !important;}
+                [data-testid="stFooter"] {visibility: hidden !important;}
                 </style>
                 """
     st.markdown(hide_st_style, unsafe_allow_html=True)
@@ -163,13 +165,17 @@ if check_password():
 
     # Exibe a tabela na tela
     st.subheader("Lançamentos Recentes")
+    
+    # Criamos uma versão da tabela sem as colunas de bastidores só para mostrar na tela
+    df_exibicao = df.drop(columns=['Data_Convertida', 'Mês/Ano'], errors='ignore')
+
     st.dataframe(
-        df,
+        df_exibicao, # <-- Atenção: mudei de df para df_exibicao aqui!
         use_container_width=True,
         column_config={
             "Valor": st.column_config.NumberColumn(
                 "Valor",
-                format="R$ %.2f" # Aplica a máscara de moeda visualmente
+                format="R$ %.2f" 
             )
         }
     )
