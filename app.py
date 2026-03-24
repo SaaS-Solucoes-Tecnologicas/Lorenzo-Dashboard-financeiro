@@ -180,7 +180,7 @@ if check_password():
             data = st.date_input("Data")
             tipo = st.selectbox("Tipo", ["Receita", "Despesa", "Reserva"])
         with col2:
-            categoria = st.selectbox("Categoria", ["Alimentação", "Transporte", "Moradia", "Lazer", "Salário", "Outros", "Trabalho", "Cofrinho", "Gasolina", "Projetos pess", "Supérfluo", "Cartão"])
+            categoria = st.selectbox("Categoria", ["Alimentação", "Transporte", "Moradia", "Lazer", "Salário", "Outros", "Trabalho", "Cofrinho", "Gasolina", "Projetos pess", "Supérfluo", "Cartão", "Assinatura"])
             valor = st.number_input("Valor (R$)", min_value=0.0, format="%.2f")
         with col3:
             descricao = st.text_input("Descrição")
