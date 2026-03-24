@@ -83,7 +83,7 @@ if check_password():
             df['Valor'] = df['Valor'].apply(limpar_moeda)
             
     else:
-        df = pd.DataFrame(columns=["Data", "Tipo", "Valor", "Categoria", "Descriçâo", "Linha_Planilha"])
+        df = pd.DataFrame(columns=["Data", "Tipo", "Valor", "Categoria", "Descrição", "Linha_Planilha"])
 
     # --- FILTRO DE DATA (SIDEBAR) ---
     if not df.empty and 'Data' in df.columns:
@@ -241,7 +241,7 @@ if check_password():
                     novo_valor = st.number_input("Novo Valor (R$)", min_value=0.0, value=float(dados_linha['Valor']), format="%.2f", key="ed_valor")
                     
                 with col_ed3:
-                    novo_descricao = st.text_input("Nova Descrição", value=dados_linha['Descriçâo'], key="ed_desc")
+                    novo_descricao = st.text_input("Nova Descrição", value=dados_linha['Descrição'], key="ed_desc")
                     
                 # Botões de Ação
                 st.write("")
