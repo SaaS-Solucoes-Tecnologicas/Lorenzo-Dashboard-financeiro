@@ -17,7 +17,7 @@ def conectar_planilha():
         gc = gspread.service_account(filename='credenciais.json')
         
     # Puxa pelo ID para ser 100% seguro contra nomes duplicados
-    id_planilha = st.secrets["cliente"]["id_planilha"]
+    id_planilha = st.secrets["cliente"]["planilha"]
     return gc.open_by_key(id_planilha)
 
 # Conecta e já separa as duas abas
