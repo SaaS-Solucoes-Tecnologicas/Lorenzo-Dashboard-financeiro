@@ -202,7 +202,7 @@ if check_password():
         
         if not df.empty:
             # Cria a lista de opções para o SelectBox (mostrando a data, descrição e valor para facilitar a busca)
-            opcoes_lancamentos = df.apply(lambda x: f"Linha {x['Linha_Planilha']}: {x['Data']} - {x['Descriçâo']} (R$ {x['Valor']:.2f})", axis=1).tolist()
+            opcoes_lancamentos = df.apply(lambda x: f"Linha {x['Linha_Planilha']}: {x['Data']} - {x['Descrição']} (R$ {x['Valor']:.2f})", axis=1).tolist()
             
             lancamento_selecionado = st.selectbox("Selecione o lançamento que deseja alterar:", opcoes_lancamentos)
             
