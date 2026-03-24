@@ -7,12 +7,53 @@ import json
 
 st.set_page_config(page_title="Meu Controle Financeiro", layout="wide")
 
+# 2. Conecta com o Google Sheets
+@st.cache_resource
+def conectar_planilha():
+    if "google_credentials" in st.secrets:
+        credenciais_dict = json.loads(st.secrets["google_credentials"])
+        gc = gspread.service_account_from_dict(credenciais_dict)
+    else:
+        gc = gspread.service_account(filename='credenciais.json')
+        
+    # Puxa pelo ID para ser 100% seguro contra nomes duplicados
+    id_planilha = st.secrets["cliente"]["id_planilha"]
+    return gc.open_by_key(id_planilha)
+
+# Conecta e já separa as duas abas
+planilha = conectar_planilha()
+aba_lancamentos = planilha.worksheet('LANÇAMENTOS')
+aba_config = planilha.worksheet('CONFIG')
+
 # --- SISTEMA DE LOGIN ---
 def check_password():
-    """Retorna True se o usuário tiver a senha correta."""
     if "password_correct" in st.session_state and st.session_state["password_correct"]:
         return True
 
+    # Vai lá na aba CONFIG e tenta ler a linha 2
+    user_salvo = aba_config.acell('A2').value
+    senha_salva = aba_config.acell('B2').value
+
+    # TELA DE PRIMEIRO ACESSO (Se estiver vazio)
+    if not user_salvo or not senha_salva:
+        st.title("🚀 Bem-vindo! Configuração Inicial")
+        st.write("Como este é o seu primeiro acesso, crie seu usuário e senha abaixo:")
+        
+        novo_user = st.text_input("Defina seu Usuário")
+        nova_senha = st.text_input("Defina sua Senha", type="password")
+        
+        if st.button("Salvar e Acessar"):
+            if novo_user and nova_senha:
+                # Grava na planilha do cliente
+                aba_config.update_acell('A2', novo_user)
+                aba_config.update_acell('B2', nova_senha)
+                st.success("Credenciais salvas com sucesso! Recarregando...")
+                st.rerun()
+            else:
+                st.warning("Por favor, preencha os dois campos.")
+        return False
+        
+    # TELA DE LOGIN NORMAL (Se já existe senha cadastrada)
     st.title("🔒 Acesso Restrito")
     st.write("Por favor, faça login para acessar o painel financeiro.")
 
@@ -20,9 +61,9 @@ def check_password():
     senha = st.text_input("Senha", type="password")
 
     if st.button("Entrar"):
-        if usuario == st.secrets["login"]["usuario"] and senha == st.secrets["login"]["senha"]:
+        if usuario == user_salvo and senha == senha_salva:
             st.session_state["password_correct"] = True
-            st.rerun() # Atualiza a página agora logado
+            st.rerun()
         else:
             st.error("Usuário ou senha incorretos.")
             return False
@@ -35,20 +76,6 @@ if check_password():
     st.title(f"Olá, {nome}! 👋")
     st.subheader("Seu Dashboard Financeiro")
 
-    # 2. Conecta com o Google Sheets
-    @st.cache_resource
-    def conectar_planilha():
-        if "google_credentials" in st.secrets:
-            credenciais_dict = json.loads(st.secrets["google_credentials"])
-            gc = gspread.service_account_from_dict(credenciais_dict)
-        else:
-            gc = gspread.service_account(filename='credenciais.json')
-            
-        nome_planilha = st.secrets["cliente"]["planilha"]
-        planilha = gc.open_by_key(nome_planilha)
-        return planilha.worksheet('LANÇAMENTOS')
-
-    aba_lancamentos = conectar_planilha()
 
     # 3. Pega os dados
     dados = aba_lancamentos.get_all_records()
