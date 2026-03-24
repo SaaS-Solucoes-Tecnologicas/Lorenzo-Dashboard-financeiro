@@ -36,8 +36,9 @@ def check_password():
 # O SEU APLICATIVO REAL SÓ APARECE SE A SENHA ESTIVER CORRETA
 # =====================================================================
 if check_password():
-    
-    st.title("Olá, Lorenzo! 👋")
+
+    nome=st.secrets["cliente"]["nome_usuario"]
+    st.title(f"Olá, {nome}! 👋")
     st.subheader("Seu Dashboard Financeiro")
 
     # 2. Conecta com o Google Sheets
