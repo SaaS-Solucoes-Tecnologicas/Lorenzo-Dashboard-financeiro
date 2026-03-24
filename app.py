@@ -45,7 +45,7 @@ if check_password():
             gc = gspread.service_account(filename='credenciais.json')
             
         nome_planilha = st.secrets["cliente"]["planilha"]
-        planilha = gc.open(nome_planilha)
+        planilha = gc.open_by_key(nome_planilha)
         return planilha.worksheet('LANÇAMENTOS')
 
     aba_lancamentos = conectar_planilha()
