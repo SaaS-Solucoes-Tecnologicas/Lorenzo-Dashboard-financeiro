@@ -52,7 +52,9 @@ if check_password():
             # Puxa a senha do arquivo local (quando rodar no seu PC)
             gc = gspread.service_account(filename='credenciais.json')
             
-        planilha = gc.open('DashBoard - Finanças')
+        # O Python agora vai procurar o nome da planilha no Cofre!
+        nome_planilha = st.secrets["cliente"]["planilha"]
+        planilha = gc.open(nome_planilha)
         return planilha.worksheet('LANÇAMENTOS')
 
     aba_lancamentos = conectar_planilha()
