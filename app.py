@@ -68,9 +68,8 @@ def check_password():
             st.error("Usuário ou senha incorretos.")
             return False
             
-    if st.button("Esqueci minha senha"):
-        st.title("🔐 Esqueceu a senha?")
-        st.write("Não se preocupe, ela está disponível no seu banco de dados (Google Sheets) na aba CONFIG.")
+    with st.expander("Esqueci minha senha"):
+        st.write("🔐 Não se preocupe! Sua senha está salva no seu banco de dados (Google Sheets) lá na aba **CONFIG**.")
     return False
 
 if check_password():
