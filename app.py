@@ -5,17 +5,14 @@ from datetime import datetime
 import plotly.express as px
 import json 
 
-# 1. Configuração inicial da página (DEVE ser o primeiro comando do app)
 st.set_page_config(page_title="Meu Controle Financeiro", layout="wide")
 
 # --- SISTEMA DE LOGIN ---
 def check_password():
     """Retorna True se o usuário tiver a senha correta."""
-    # Se já estiver logado na sessão, passa direto
     if "password_correct" in st.session_state and st.session_state["password_correct"]:
         return True
 
-    # Se não estiver logado, mostra a tela de login
     st.title("🔒 Acesso Restrito")
     st.write("Por favor, faça login para acessar o painel financeiro.")
 
@@ -23,7 +20,6 @@ def check_password():
     senha = st.text_input("Senha", type="password")
 
     if st.button("Entrar"):
-        # Puxa o usuário e senha lá do nosso Cofre (Secrets)
         if usuario == st.secrets["login"]["usuario"] and senha == st.secrets["login"]["senha"]:
             st.session_state["password_correct"] = True
             st.rerun() # Atualiza a página agora logado
@@ -32,9 +28,7 @@ def check_password():
             return False
     return False
 
-# =====================================================================
-# O SEU APLICATIVO REAL SÓ APARECE SE A SENHA ESTIVER CORRETA
-# =====================================================================
+
 if check_password():
 
     nome=st.secrets["cliente"]["nome_usuario"]
@@ -44,16 +38,12 @@ if check_password():
     # 2. Conecta com o Google Sheets
     @st.cache_resource
     def conectar_planilha():
-        # Verifica se estamos na nuvem (onde os 'secrets' existem)
         if "google_credentials" in st.secrets:
-            # Puxa a senha do cofre da nuvem
             credenciais_dict = json.loads(st.secrets["google_credentials"])
             gc = gspread.service_account_from_dict(credenciais_dict)
         else:
-            # Puxa a senha do arquivo local (quando rodar no seu PC)
             gc = gspread.service_account(filename='credenciais.json')
             
-        # O Python agora vai procurar o nome da planilha no Cofre!
         nome_planilha = st.secrets["cliente"]["planilha"]
         planilha = gc.open(nome_planilha)
         return planilha.worksheet('LANÇAMENTOS')
@@ -63,14 +53,11 @@ if check_password():
     # 3. Pega os dados
     dados = aba_lancamentos.get_all_records()
     
-    # Transforma dados em uma tabela inteligente do Pandas e prepara os dados
     if dados:
         df = pd.DataFrame(dados)
         
-        # MÁGICA 1: Guarda o número da linha original do Google Sheets
         df['Linha_Planilha'] = df.index + 2 
         
-        # MÁGICA 2: Limpa os valores em dinheiro logo no começo para todo o app usar
         if 'Valor' in df.columns:
             def limpar_moeda(v):
                 if isinstance(v, (int, float)):
@@ -106,15 +93,13 @@ if check_password():
             df = df[df['Mês/Ano'].isin(meses_selecionados)]
 
 
-    # =====================================================================
+    
     # CRIANDO AS ABAS DA INTERFACE
     # =====================================================================
     st.divider()
     tab1, tab2 = st.tabs(["📊 Dashboard e Lançamentos", "✏️ Editar / Excluir"])
 
-    # =====================================================================
-    # ABA 1: VISUALIZAÇÃO E INSERÇÃO (Seu código original indentado aqui)
-    # =====================================================================
+    
     with tab1:
         st.subheader("📊 Resumo Financeiro")
 
@@ -197,9 +182,9 @@ if check_password():
         if st.button("🔄 Atualizar Tabela e Gráficos"):
             st.rerun()
 
-    # =====================================================================
-    # ABA 2: EDITAR E EXCLUIR (A Nova Funcionalidade CRUD)
-    # =====================================================================
+   
+    # ABA 2: EDITAR E EXCLUIR (A Nova Funcionalidade CRUD) #
+    
     with tab2:
         st.subheader("✏️ Editar ou Excluir Lançamento")
         
