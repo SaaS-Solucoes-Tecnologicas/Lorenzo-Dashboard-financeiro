@@ -37,18 +37,6 @@ def check_password():
 # =====================================================================
 if check_password():
     
-    # Aquela trava visual para esconder o menu e o rodapé do Streamlit
-    hide_st_style = """
-                <style>
-                #MainMenu {visibility: hidden !important;}
-                footer {visibility: hidden !important;}
-                header {visibility: hidden !important;}
-                [data-testid="stHeader"] {visibility: hidden !important;}
-                [data-testid="stFooter"] {visibility: hidden !important;}
-                </style>
-                """
-    st.markdown(hide_st_style, unsafe_allow_html=True)
-    
     st.title("💸 Dashboard Financeiro")
 
     # 2. Conecta com o Google Sheets
