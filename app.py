@@ -37,7 +37,8 @@ def check_password():
 # =====================================================================
 if check_password():
     
-    st.title("Olá, Lorenzo! \nSeu Dashboard Financeiro 💸")
+    st.title("Olá, Lorenzo! 👋")
+    st.subheader("Seu Dashboard Financeiro 💸")
 
     # 2. Conecta com o Google Sheets
     @st.cache_resource
